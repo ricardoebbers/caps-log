@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class LogServiceImpl implements LogService {
@@ -20,12 +22,12 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public Mono<Log> findById(Long id) {
+    public Mono<Log> findById(UUID id) {
         return repository.findById(id);
     }
 
     @Override
-    public Mono<Log> save(Mono<Log> entity) {
+    public Mono<Log> save(Log entity) {
         return repository.save(entity);
     }
 }
