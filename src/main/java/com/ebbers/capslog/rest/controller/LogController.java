@@ -3,6 +3,8 @@ package com.ebbers.capslog.rest.controller;
 import com.ebbers.capslog.domain.service.LogService;
 import com.ebbers.capslog.rest.resource.LogListResource;
 import com.ebbers.capslog.rest.resource.LogResource;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequestMapping("/logs")
 @RequiredArgsConstructor
@@ -19,7 +23,11 @@ public class LogController {
 
     private final LogService service;
 
-    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get Log by Id"),
+            @ApiResponse(responseCode = "404", description = "Log not found")
+    })
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<LogResource>> get(@PathVariable UUID id) {
         return service.findById(id)
                 .map(LogResource::fromEntity)
@@ -27,12 +35,19 @@ public class LogController {
                 .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
-    @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get all logs")
+    })
+    @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     public Flux<LogListResource> list() {
         return service.findAll().map(LogListResource::fromEntity);
     }
 
-    @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get Log by Id"),
+            @ApiResponse(responseCode = "404", description = "Log not found")
+    })
+    @PostMapping(value = "/", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ResponseEntity<LogResource>> create(@RequestBody LogResource resource) {
         return service.save(resource.toEntity())
