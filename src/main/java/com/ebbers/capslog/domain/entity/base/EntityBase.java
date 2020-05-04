@@ -15,7 +15,7 @@ public abstract class EntityBase<T extends EntityBase<T>> {
     private final LocalDateTime date;
     private final Long owner;
     @Id
-    private final Long id;
+    private Long id;
 
     protected EntityBase(Long id, UUID uuid, LocalDateTime date, Long owner) {
         this.id = Optional.ofNullable(id).orElse(null);
