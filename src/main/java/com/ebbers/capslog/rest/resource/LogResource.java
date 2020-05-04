@@ -2,38 +2,44 @@ package com.ebbers.capslog.rest.resource;
 
 import com.ebbers.capslog.domain.entity.Level;
 import com.ebbers.capslog.domain.entity.Log;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Value;
-import reactor.core.publisher.Mono;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Value
-@Builder
-public class LogResource {
-    UUID id;
-    Level level;
-    String description;
-    String log;
-    String origin;
-    LocalDateTime date;
-    Long quantity;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-    public static Mono<LogResource> from(Mono<Log> entity) {
-        return entity.map(it -> LogResource.builder()
-                .id(it.getUuid())
-                .level(it.getLevel())
-                .description(it.getDescription())
-                .log(it.getLog())
-                .origin(it.getOrigin())
-                .date(it.getDate())
-                .quantity(it.getQuantity())
-                .build());
+@Data
+@Builder
+@JsonInclude(NON_NULL)
+public class LogResource {
+    private final Long owner;
+    private final UUID id;
+    private final Level level;
+    private final String description;
+    private final String log;
+    private final String origin;
+    private final LocalDateTime date;
+    private final Long quantity;
+
+    public static LogResource fromEntity(Log entity) {
+        return LogResource.builder()
+                .owner(entity.getOwner())
+                .id(entity.getUuid())
+                .level(entity.getLevel())
+                .description(entity.getDescription())
+                .log(entity.getLog())
+                .origin(entity.getOrigin())
+                .date(entity.getDate())
+                .quantity(entity.getQuantity())
+                .build();
     }
 
     public Log toEntity() {
         return Log.builder()
+                .owner(getOwner())
                 .level(getLevel())
                 .description(getDescription())
                 .log(getLog())
