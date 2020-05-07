@@ -1,19 +1,12 @@
-package com.ebbers.capslog.domain.service;
+package com.ebbers.capslog.infrastructure.persistence.imports;
 
 import com.ebbers.capslog.domain.entity.Level;
 import com.ebbers.capslog.domain.entity.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface LogService {
-
-    Page<Log> findAll(Pageable pageable);
-
-    Optional<Log> findById(Long id);
-
-    Log save(Log entity);
+public interface LogJpaRepository extends JpaRepository<Log, Long> {
 
     Page<Log> findByLevel(Level level, Pageable pageable);
 }

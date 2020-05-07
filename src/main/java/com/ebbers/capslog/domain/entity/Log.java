@@ -1,30 +1,42 @@
 package com.ebbers.capslog.domain.entity;
 
-import com.ebbers.capslog.domain.entity.base.EntityBase;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Value
-public class Log extends EntityBase<Log> {
-    Level level;
-    String description;
-    String log;
-    String origin;
-    Long quantity;
+@Data
+@Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Log {
 
-    @Builder
-    public Log(Long id, UUID uuid, LocalDateTime date, Long owner, Level level, String description, String log,
-               String origin, Long quantity) {
-        super(id, uuid, date, owner);
-        this.level = level;
-        this.description = description;
-        this.log = log;
-        this.origin = origin;
-        this.quantity = quantity;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Level level;
+    @Column
+    @NotNull
+    private String description;
+    @Column
+    @NotNull
+    private String log;
+    @Column
+    @NotNull
+    private String origin; //TODO: Deve extrair essa informaçao do token
+    @Column
+    @NotNull
+    private LocalDateTime date;
+    @Column
+    @NotNull
+    private Long quantity;
+
 }

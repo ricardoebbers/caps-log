@@ -1,15 +1,18 @@
 package com.ebbers.capslog.domain.imports;
 
+import com.ebbers.capslog.domain.entity.Level;
 import com.ebbers.capslog.domain.entity.Log;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.UUID;
+import java.util.Optional;
 
 public interface LogRepository {
-    Mono<Log> findById(UUID id);
+    Optional<Log> findById(Long id);
 
-    Mono<Log> save(Log entity);
+    Log save(Log entity);
 
-    Flux<Log> findAll();
+    Page<Log> findAll(Pageable pageable);
+
+    Page<Log> findByLevel(Level level, Pageable pageable);
 }

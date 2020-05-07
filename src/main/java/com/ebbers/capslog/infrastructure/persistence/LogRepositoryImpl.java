@@ -1,26 +1,23 @@
-package com.ebbers.capslog.domain.service.impl;
+package com.ebbers.capslog.infrastructure.persistence;
 
 import com.ebbers.capslog.domain.entity.Level;
 import com.ebbers.capslog.domain.entity.Log;
 import com.ebbers.capslog.domain.imports.LogRepository;
-import com.ebbers.capslog.domain.service.LogService;
+import com.ebbers.capslog.infrastructure.persistence.imports.LogJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
+
 @RequiredArgsConstructor
-@Service
-public class LogServiceImpl implements LogService {
+@Repository
+public class LogRepositoryImpl implements LogRepository {
 
-    private final LogRepository repository;
-
-    @Override
-    public Page<Log> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
-    }
+    private final LogJpaRepository repository;
 
     @Override
     public Optional<Log> findById(Long id) {
@@ -29,7 +26,12 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Log save(Log entity) {
-        return repository.save(entity);
+        return repository.save(requireNonNull(entity));
+    }
+
+    @Override
+    public Page<Log> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Override
