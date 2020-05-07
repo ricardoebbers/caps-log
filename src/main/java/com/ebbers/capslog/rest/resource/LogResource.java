@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -15,8 +14,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Builder
 @JsonInclude(NON_NULL)
 public class LogResource {
-    private final Long owner;
-    private final UUID id;
+    private final Long id;
     private final Level level;
     private final String description;
     private final String log;
@@ -26,8 +24,7 @@ public class LogResource {
 
     public static LogResource fromEntity(Log entity) {
         return LogResource.builder()
-                .owner(entity.getOwner())
-                .id(entity.getUuid())
+                .id(entity.getId())
                 .level(entity.getLevel())
                 .description(entity.getDescription())
                 .log(entity.getLog())
@@ -39,7 +36,6 @@ public class LogResource {
 
     public Log toEntity() {
         return Log.builder()
-                .owner(getOwner())
                 .level(getLevel())
                 .description(getDescription())
                 .log(getLog())
