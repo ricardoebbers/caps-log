@@ -1,11 +1,16 @@
 package com.ebbers.capslog.rest.controller;
 
+import com.ebbers.capslog.domain.entity.Level;
 import com.ebbers.capslog.domain.service.LogService;
 import com.ebbers.capslog.rest.resource.LogListResource;
 import com.ebbers.capslog.rest.resource.LogResource;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +46,21 @@ public class LogController {
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     public Flux<LogListResource> list() {
         return service.findAll().map(LogListResource::fromEntity);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get all logs")
+    })
+    @GetMapping(value = "/level", produces = APPLICATION_JSON_VALUE)
+    public Flux<LogListResource> list(
+            @RequestParam Level level,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "ASC") Direction direction,
+            @RequestParam(defaultValue = "", required = false) String sort
+    ) {
+        Pageable pageable = PageRequest.of(page, size, (sort.isEmpty()) ? Sort.unsorted() : Sort.by(direction, sort));
+        return service.findByLevel(level, pageable).map(LogListResource::fromEntity);
     }
 
     @ApiResponses(value = {

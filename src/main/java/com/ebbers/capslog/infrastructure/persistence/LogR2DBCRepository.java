@@ -1,9 +1,11 @@
 package com.ebbers.capslog.infrastructure.persistence;
 
+import com.ebbers.capslog.domain.entity.Level;
 import com.ebbers.capslog.domain.entity.Log;
 import com.ebbers.capslog.domain.imports.LogRepository;
 import com.ebbers.capslog.infrastructure.persistence.imports.ImportedLogR2DBCRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,5 +33,10 @@ public class LogR2DBCRepository implements LogRepository {
     @Override
     public Flux<Log> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Flux<Log> findByLevel(Level level, Pageable pageable) {
+        return repository.findByLevel(level, pageable);
     }
 }
